@@ -98,3 +98,15 @@ allure-results/
 
 # Logs
 *.log
+
+# Откройте .gitignore и добавьте в конец:
+echo "" >> .gitignore
+echo "# Соседние проекты" >> .gitignore
+echo "../Sprint-4-2/" >> .gitignore
+echo "../New_Sprint_4/" >> .gitignore
+echo "../Sprint-5/" >> .gitignore
+echo "../Sprint_5_Old/" >> .gitignore
+echo "../Sprint_5_Stady/" >> .gitignore
+echo "../Sprint_6_Stady/" >> .gitignore
+echo "../qa_python/" >> .gitignore
+echo "../ссылкa на отчет.txt" >> .gitignore

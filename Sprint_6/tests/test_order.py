@@ -1,36 +1,20 @@
+# test_order.py
+
 import pytest
 import allure
 from pages.order_page import OrderPage
+from data import TestData
 
 
 @allure.title("Проверка позитивного сценария заказа самоката через {order_button} кнопку")
-@pytest.mark.parametrize("order_button,test_data", [
-    ("верхнюю", {
-        "name": "Иван",
-        "last_name": "Петров",
-        "address": "ул. Ленина, д. 1",
-        "phone": "89991234567",
-        "metro_station": "Бульвар Рокоссовского",
-        "delivery_day": 15,
-        "period": "сутки",
-        "color": "black",
-        "comment": "Первый тестовый заказ через верхнюю кнопку"
-    }),
-    ("нижнюю", {
-        "name": "Мария",
-        "last_name": "Сидорова",
-        "address": "пр. Мира, д. 10",
-        "phone": "89997654321",
-        "metro_station": "Выхино",
-        "delivery_day": 25,
-        "period": "двое суток",
-        "color": "grey",
-        "comment": "Второй тестовый заказ через нижнюю кнопку"
-    })
-])
+@pytest.mark.parametrize("order_button,test_data",  [
+        ("верхнюю", TestData.ORDER_DATA_1),
+        ("нижнюю", TestData.ORDER_DATA_2)
+    ])
 def test_successful_order_flow(driver, order_button, test_data):
     order_page = OrderPage(driver)
     order_page.go_to_site()
+    order_page.close_cookie_banner()
 
     with allure.step(f"1. Начало заказа через {order_button} кнопку"):
         if order_button == "верхнюю":

@@ -1,9 +1,10 @@
+# test_logos.py
+
 import pytest
 import allure
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
+from helpers import WindowHelper
 
 
 class TestLogos:
@@ -14,45 +15,38 @@ class TestLogos:
         order_page = OrderPage(driver)
 
         main_page.go_to_site()
-
+        main_page.close_cookie_banner()
         main_page.click_order_button_top()
-
         order_page.wait_for_load_order_page()
 
-        with allure.step("Клик на логотип Самоката со страницы заказа"):
+        with allure.step("Кликнуть на логотип Самоката"):
             main_page.click_scooter_logo()
 
-        with allure.step("Проверка возврата на главную страницу"):
-            main_page.wait_for_url(main_page.base_url)
-            
-            main_page.wait_for_visibility(main_page.ORDER_BUTTON_TOP)
+        with allure.step("Проверить возврат на главную страницу"):
+            main_page.wait_for_main_page()
+            assert main_page.is_order_button_top_visible()
 
     @allure.title("Проверка открытия Дзена при клике на логотип Яндекса")
     def test_click_yandex_logo_opens_dzen(self, driver):
         main_page = MainPage(driver)
         main_page.go_to_site()
+        main_page.close_cookie_banner()
     
-        original_window = driver.current_window_handle
+        original_window = main_page.get_current_window_handle()
+        original_count = len(main_page.get_window_handles())
     
-        with allure.step("Клик на логотип Яндекса"):
+        with allure.step("Кликнуть на логотип Яндекса"):
             main_page.click_yandex_logo()
     
-        with allure.step("Ожидание открытия нового окна"):
-            WebDriverWait(driver, 5).until(
-                lambda d: len(d.window_handles) == 2
-        )
+        with allure.step("Ожидать открытия нового окна"):
+            WindowHelper.wait_for_new_window(driver, original_count)
     
-        with allure.step("Переключение на новое окно"):
-            for window_handle in driver.window_handles:
-                if window_handle != original_window:
-                    driver.switch_to.window(window_handle)
-                    break
+        with allure.step("Переключиться на новое окно"):
+            WindowHelper.switch_to_new_window(driver, original_window)
                     
-        with allure.step("Ожидание загрузки Дзена"):
-            WebDriverWait(driver, 10).until(
-                lambda d: "dzen.ru" in d.current_url
-        )
-
-        with allure.step("Проверка загрузки Дзена"):
-            current_url = driver.current_url
-            assert "dzen.ru" in current_url, f"Текущий URL: {current_url}, ожидался Дзен"
+        with allure.step("Ожидать загрузки Дзена"):
+            WindowHelper.wait_for_dzen(driver)
+    
+        with allure.step("Проверить загрузку Дзена"):
+            current_url = main_page.get_current_url()
+            assert "dzen.ru" in current_url

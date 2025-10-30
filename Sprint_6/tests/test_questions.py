@@ -1,3 +1,5 @@
+# test_questions.py
+
 import pytest
 import allure
 from pages.main_page import MainPage
@@ -10,13 +12,14 @@ class TestQuestions:
     def test_question_answers(self, driver, question_index):
         main_page = MainPage(driver)
         main_page.go_to_site()
+        main_page.close_cookie_banner()
         
         with allure.step(f"Клик на вопрос {question_index}"):
             main_page.click_question(question_index)
         
         with allure.step(f"Проверка открытия ответа {question_index}"):
-            answer_locator = main_page.ANSWER_LOCATORS[question_index]
+            answer_locator = main_page.locators.ANSWER_LOCATORS[question_index]
             main_page.wait_for_visibility(answer_locator)
             
             actual_answer = main_page.get_answer_text(question_index)
-            assert actual_answer
+            assert actual_answer, f"Ответ {question_index} соответствует вопросу {question_index}"

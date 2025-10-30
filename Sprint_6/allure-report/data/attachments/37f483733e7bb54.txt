@@ -1,0 +1,4 @@
+✅ Способ 1 сработал
+URL: https://dzen.ru/?yredirect=true
+✅ Способ 2 сработал
+URL: https://dzen.ru/?yredirect=true

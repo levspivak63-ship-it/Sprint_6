@@ -1,0 +1,12 @@
+Исходный URL: https://qa-scooter.praktikum-services.ru/
+Исходное окно: fcaedd50-a099-4873-b305-ced6871fd727
+Окон до клика: 1
+Клик выполнен
+Окон после клика: 2
+✅ Новая вкладка открылась!
+Новое окно: b7dcb735-9765-4d85-9ebb-977c23f42acb
+Переключились на окно: b7dcb735-9765-4d85-9ebb-977c23f42acb
+URL новой вкладки: https://dzen.ru/?yredirect=true
+Попытка 1: URL = https://dzen.ru/?yredirect=true
+✅ URL изменился с about:blank на: https://dzen.ru/?yredirect=true
+✅ Дзен найден в URL!

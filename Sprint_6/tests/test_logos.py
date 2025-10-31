@@ -4,7 +4,6 @@ import pytest
 import allure
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
-from helpers import WindowHelper
 
 
 class TestLogos:
@@ -39,13 +38,13 @@ class TestLogos:
             main_page.click_yandex_logo()
     
         with allure.step("Ожидать открытия нового окна"):
-            WindowHelper.wait_for_new_window(driver, original_count)
+            main_page.wait_for_new_window(original_count)
     
         with allure.step("Переключиться на новое окно"):
-            WindowHelper.switch_to_new_window(driver, original_window)
+            main_page.switch_to_new_window(original_window)
                     
         with allure.step("Ожидать загрузки Дзена"):
-            WindowHelper.wait_for_dzen(driver)
+            main_page.wait_for_dzen()
     
         with allure.step("Проверить загрузку Дзена"):
             current_url = main_page.get_current_url()

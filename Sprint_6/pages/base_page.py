@@ -69,11 +69,6 @@ class BasePage:
             EC.url_to_be(self.config.ORDER_PAGE)
         )
 
-    @allure.step("Переключиться на новое окно")
-    def switch_to_new_window(self, original_window):
-        from helpers import WindowHelper
-        return WindowHelper.switch_to_new_window(self.driver, original_window)
-
     @allure.step("Получить текущий URL")
     def get_current_url(self):
         return self.driver.current_url
@@ -85,3 +80,24 @@ class BasePage:
     @allure.step("Получить текущий window handle")
     def get_current_window_handle(self):
         return self.driver.current_window_handle
+    
+    @allure.step("Ожидать открытия нового окна")
+    def wait_for_new_window(self, original_window_count, timeout=5):
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: len(d.window_handles) > original_window_count
+        )
+        return True
+    
+    @allure.step("Ожидать загрузки Дзена")
+    def wait_for_dzen(self, timeout=10):
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: "dzen.ru" in d.current_url
+        )
+        return True
+    
+    @allure.step("Переключиться на новое окно")
+    def switch_to_new_window(self, original_window):
+        for window_handle in self.driver.window_handles:
+            if window_handle != original_window:
+                self.driver.switch_to.window(window_handle)
+                return window_handle

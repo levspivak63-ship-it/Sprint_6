@@ -1,75 +1,44 @@
-# test_order.py
-
 import pytest
 import allure
 from pages.order_page import OrderPage
 from data import TestData
 
 
-class TestOrder: 
-
-    @allure.title("Проверка заказа самоката через верхнюю кнопку")
-    def test_successful_order_flow_top_button(self, driver): 
+class TestOrder:
+    
+    @allure.title("Проверка заказа самоката")
+    @pytest.mark.parametrize("click_method,test_data,scenario_name", [
+        ("click_top_order_button", TestData.ORDER_DATA_1, "через верхнюю кнопку Заказать"),
+        ("click_bottom_order_button", TestData.ORDER_DATA_2, "через нижнюю кнопку Заказать")
+    ])
+    def test_successful_order_flow(self, driver, click_method, test_data, scenario_name):
         order_page = OrderPage(driver)
         order_page.go_to_site()
         order_page.close_cookie_banner()
 
-        with allure.step("Начать заказ через верхнюю кнопку"):
-            order_page.click_top_order_button()
+        with allure.step(f"Начать заказ {scenario_name}"):
+            getattr(order_page, click_method)()
 
         with allure.step("Заполнить первую страницу заказа"):
             order_page.fill_first_step_form(
-                name=TestData.ORDER_DATA_1["name"],
-                last_name=TestData.ORDER_DATA_1["last_name"],
-                address=TestData.ORDER_DATA_1["address"],
-                phone=TestData.ORDER_DATA_1["phone"],
-                metro_station=TestData.ORDER_DATA_1["metro_station"]
+                name=test_data["name"],
+                last_name=test_data["last_name"],
+                address=test_data["address"],
+                phone=test_data["phone"],
+                metro_station=test_data["metro_station"]
             )
 
         with allure.step("Заполнить вторую страницу заказа"):
             order_page.fill_second_step_form(
-                delivery_day=TestData.ORDER_DATA_1["delivery_day"],
-                period=TestData.ORDER_DATA_1["period"],
-                color=TestData.ORDER_DATA_1["color"],
-                comment=TestData.ORDER_DATA_1["comment"]
+                delivery_day=test_data["delivery_day"],
+                period=test_data["period"],
+                color=test_data["color"],
+                comment=test_data["comment"]
             )
 
-        with allure.step("Подтвердить заказ"):
+        with allure.step(f"Подтвердить заказ"):
             order_page.confirm_order()
 
-        with allure.step("Проверить успешное оформление заказа"):
-            success_message = order_page.get_success_message()
-            assert "Заказ оформлен" in success_message
-
-    @allure.title("Проверка заказа самоката через нижнюю кнопку")  
-    def test_successful_order_flow_bottom_button(self, driver):
-        order_page = OrderPage(driver)
-        order_page.go_to_site()
-        order_page.close_cookie_banner()
-
-        with allure.step("Начать заказ через нижнюю кнопку"):
-            order_page.click_bottom_order_button()
-
-        with allure.step("Заполнить первую страницу заказа"):
-            order_page.fill_first_step_form(
-                name=TestData.ORDER_DATA_2["name"],
-                last_name=TestData.ORDER_DATA_2["last_name"],
-                address=TestData.ORDER_DATA_2["address"],
-                phone=TestData.ORDER_DATA_2["phone"],
-                metro_station=TestData.ORDER_DATA_2["metro_station"]
-            )
-
-        with allure.step("Заполнить вторую страницу заказа"):
-            order_page.fill_second_step_form(
-                delivery_day=TestData.ORDER_DATA_2["delivery_day"],
-                period=TestData.ORDER_DATA_2["period"],
-                color=TestData.ORDER_DATA_2["color"],
-                comment=TestData.ORDER_DATA_2["comment"]
-            )
-
-        with allure.step("Подтвердить заказ"):
-            order_page.confirm_order()
-
-        with allure.step("Проверить успешное оформление заказа"):
+        with allure.step(f"Проверить успешное оформление заказа {scenario_name}"):
             success_message = order_page.get_success_message()
             assert "Заказ оформлен" in success_message
